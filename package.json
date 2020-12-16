@@ -1,0 +1,25 @@
+{
+    "name": "kakeibo",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "dev": "next dev"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/afurukawa86/kakeibo.git"
+    },
+    "keywords": [],
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/afurukawa86/kakeibo/issues"
+    },
+    "homepage": "https://github.com/afurukawa86/kakeibo#readme",
+    "dependencies": {
+        "next": "^10.0.3",
+        "react": "^17.0.1",
+        "react-dom": "^17.0.1"
+    }
+}
