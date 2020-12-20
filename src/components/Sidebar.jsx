@@ -12,6 +12,13 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
+import Snackbar from "@material-ui/core/Snackbar";
+import MuiAlert from "@material-ui/lab/Alert";
+
+function Alert(props) {
+    return <MuiAlert elevation={6} variant="filled" {...props} />;
+}
+
 function Sidebar() {
 
     const [orcamento, setOrcamento] = useState('');
@@ -20,6 +27,9 @@ function Sidebar() {
     const orcamentoService = new OrcamentoService();
     const [open, setOpen] = React.useState(false);
     const [incluir, setIncluir] = React.useState(false);
+
+    const [sucesso, setSucesso] = React.useState(false);
+    const [erro, setErro] = React.useState(false);
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -35,6 +45,11 @@ function Sidebar() {
 
     const handleChange = (props) => {
         setOrcamento(props.target.value);
+    };
+
+    const handleCloseAviso = (event, reason) => {
+        setSucesso(false);
+        setErro(false);
     };
 
     useEffect(() => {
@@ -61,7 +76,9 @@ function Sidebar() {
                     orcamentoService
                         .cadastra(orcamento)
                         .then(() => setOrcamentos(prev => [...prev, orcamento]))
+                        .then(() => setSucesso(true));
                 } else {
+                    setErro(true)
                     throw new Error('Orçamento já cadastrado');
                 }
             })
@@ -73,9 +90,9 @@ function Sidebar() {
     }
 
     return (
-        <div className="flex-0 static pt-0 overflow-y-visible h-auto block bg-white z-40">
+        <div className="flex-0 static pt-0 overflow-y-visible h-auto block z-40 bg-gray-50">
             <div className="top-16 sticky mr-0 h-auto block bg-transparent overflow-y-auto overflow-hidden">
-                <div className="block z-10 inset-x-0 absolute pointer-events-none h-12 from-white bg-gradient-to-b"></div>
+                <div className="block z-10 inset-x-0 absolute pointer-events-none h-12 from-gray-50 bg-gradient-to-b"></div>
                 <nav className="px-5 pb-14 pt-10 text-sm h-screen-1 overflow-y-auto font-medium">
                     <ul>
                         <li>
@@ -117,6 +134,14 @@ function Sidebar() {
                     <Button onClick={handleClose} color="primary">Incluir</Button>
                 </DialogActions>
             </Dialog>
+
+            <Snackbar open={sucesso} autoHideDuration={3000} onClose={handleCloseAviso}>
+                <Alert severity="success">Cadastrado com sucesso</Alert>
+            </Snackbar>
+
+            <Snackbar open={erro} autoHideDuration={3000} onClose={handleCloseAviso}>
+                <Alert severity="error">Orcamento já cadastrado</Alert>
+            </Snackbar>
         </div >
     )
 }

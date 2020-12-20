@@ -4,7 +4,7 @@ import Main from '../components/Main';
 
 export default function Home() {
   return (
-    <>
+    <div className="h-screen bg-gray-50">
       <Head>
         <title>kakeibo</title>
         <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&display=swap" rel="stylesheet" />
@@ -15,6 +15,6 @@ export default function Home() {
       </Head>
       <Header />
       <Main />
-    </>
+    </div>
   )
 }
