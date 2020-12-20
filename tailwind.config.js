@@ -1,5 +1,8 @@
 module.exports = {
-  purge: ['./src/pages/**/*.js', './srv/components/**/*.jsx'],
+  purge: [
+    './src/**/*.jsx',
+    './src/**/*.js',
+  ],
   darkMode: false, // or 'media' or 'class'
   theme: {
     extend: {
