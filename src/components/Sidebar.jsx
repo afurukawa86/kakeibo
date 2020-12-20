@@ -90,9 +90,8 @@ function Sidebar() {
     }
 
     return (
-        <div className="flex-0 static pt-0 overflow-y-visible h-auto block z-40 bg-gray-50">
+        <div className="flex-0 static pt-0 ml-5 overflow-y-visible h-auto block z-40 bg-preto-sidebar">
             <div className="top-16 sticky mr-0 h-auto block bg-transparent overflow-y-auto overflow-hidden">
-                <div className="block z-10 inset-x-0 absolute pointer-events-none h-12 from-gray-50 bg-gradient-to-b"></div>
                 <nav className="px-5 pb-14 pt-10 text-sm h-screen-1 overflow-y-auto font-medium">
                     <ul>
                         <li>
