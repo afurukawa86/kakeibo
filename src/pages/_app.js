@@ -1,4 +1,5 @@
-import '../styles/main.css'
+import '../styles/main.css';
+import 'fontsource-roboto';
 
 function MyApp({ Component, pageProps }) {
     return <Component {...pageProps} />

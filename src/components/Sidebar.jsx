@@ -2,12 +2,40 @@ import { useState, useEffect } from 'react';
 import ListaOrcamentos from './ListaOrcamentos';
 import ListaInvestimentos from './ListaInvestimentos';
 import OrcamentoService from '../services/OrcamentoService';
+import Icon from '@material-ui/core/Icon';
+
+import React from 'react';
+import Button from '@material-ui/core/Button';
+import TextField from '@material-ui/core/TextField';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogTitle from '@material-ui/core/DialogTitle';
 
 function Sidebar() {
 
+    const [orcamento, setOrcamento] = useState('');
     const [orcamentos, setOrcamentos] = useState([]);
     const [investimentos, setInvestimentos] = useState([]);
     const orcamentoService = new OrcamentoService();
+    const [open, setOpen] = React.useState(false);
+    const [incluir, setIncluir] = React.useState(false);
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+
+    const handleClose = (props) => {
+        setOpen(false);
+
+        if (props.target.innerText == 'INCLUIR') {
+            setIncluir(true);
+        }
+    };
+
+    const handleChange = (props) => {
+        setOrcamento(props.target.value);
+    };
 
     useEffect(() => {
         orcamentoService
@@ -16,11 +44,27 @@ function Sidebar() {
             .catch(erro => console.log(erro));
     }, [orcamentos]);
 
+    useEffect(() => {
+        if (incluir && orcamento.length > 0) {
+            adicionaOrcamento();
+            setOrcamento('');
+        }
+        setIncluir(false);
+    }, [incluir]);
+
     function adicionaOrcamento() {
-        const orcamento = 'orcamento';
         orcamentoService
-            .cadastra(orcamento)
-            .then(() => setOrcamentos(prev => [...prev, orcamento]))
+            .lista()
+            .then(orcamentosDB => !orcamentosDB.some(orcamentoDB => orcamentoDB == orcamento))
+            .then(res => {
+                if (res) {
+                    orcamentoService
+                        .cadastra(orcamento)
+                        .then(() => setOrcamentos(prev => [...prev, orcamento]))
+                } else {
+                    throw new Error('Orçamento já cadastrado');
+                }
+            })
             .catch(erro => console.log(erro));
     }
 
@@ -37,18 +81,15 @@ function Sidebar() {
                         <li>
                             <div className="flex flex-row justify-between">
                                 <h5>Orçamentos</h5>
-                                <svg className="cursor-pointer" onClick={adicionaOrcamento} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="1.5rem">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
+                                <Icon className="cursor-pointer" onClick={handleClickOpen} color="primary">add_circle</Icon>
+
                             </div>
                             <ListaOrcamentos orcamentos={orcamentos} />
                         </li>
                         <li>
                             <div className="flex flex-row justify-between">
                                 <h5>Investimentos</h5>
-                                <svg className="cursor-pointer" onClick={adicionaInvestimento} xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" width="1.5rem">
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v3m0 0v3m0-3h3m-3 0H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                                </svg>
+                                <Icon className="cursor-pointer" onClick={adicionaInvestimento} color="primary">add_circle</Icon>
                             </div>
                             <ul>
                                 <ListaInvestimentos investimentos={investimentos} />
@@ -57,6 +98,25 @@ function Sidebar() {
                     </ul>
                 </nav>
             </div>
+
+            <Dialog open={open} onClose={handleClose} aria-labelledby="form-dialog-title">
+                <DialogTitle id="form-dialog-title">Novo Orçamento</DialogTitle>
+                <DialogContent>
+                    <TextField
+                        autoFocus
+                        margin="dense"
+                        id="name"
+                        label="Orçamento"
+                        type="text"
+                        fullWidth
+                        onChange={handleChange}
+                    />
+                </DialogContent>
+                <DialogActions>
+                    <Button onClick={handleClose} color="primary">Cancel</Button>
+                    <Button onClick={handleClose} color="primary">Incluir</Button>
+                </DialogActions>
+            </Dialog>
         </div >
     )
 }
