@@ -86,7 +86,7 @@ function Sidebar() {
     }
 
     function adicionaInvestimento() {
-        setInvestimentos([...investimentos, '1'])
+        setInvestimentos([...investimentos, Date()])
     }
 
     return (
